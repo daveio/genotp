@@ -10,7 +10,7 @@ import (
 
 var (
 	app = kingpin.
-		New("genotp", "Generate OATH-TOTP one-time passwords from the command line.")
+		New("gotp", "Generate OATH-TOTP one-time passwords from the command line.")
 	debug = app.
 		Flag("debug", "Enable debug mode.").
 		Short('d').
@@ -65,7 +65,7 @@ type Keychain struct {
 }
 
 func init() {
-	store.Init("genotp")
+	store.Init("gotp")
 }
 
 func loadConfig() Keychain {
