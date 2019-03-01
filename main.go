@@ -55,13 +55,13 @@ var (
 )
 
 type Account struct {
-	Site string `yaml:"site"`
-	UID  string `yaml:"uid"`
-	Key  string `yaml:"key"`
+	Site string `json:"site"`
+	UID  string `json:"uid"`
+	Key  string `json:"key"`
 }
 
 type Keychain struct {
-	Accounts []Account `yaml:"accounts"`
+	Accounts []Account `json:"accounts"`
 }
 
 func init() {
