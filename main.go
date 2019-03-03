@@ -89,7 +89,7 @@ func main() {
 		fmt.Println("Debug mode enabled.")
 	}
 	// fmt.Printf(keychain.Accounts[0].Site)
-	appVersion := fmt.Sprintf("%i.%i.%i (%i)", AppVersionMajor, AppVersionMinor,
+	appVersion := fmt.Sprintf("%d.%d.%d (%d)", AppVersionMajor, AppVersionMinor,
 		AppVersionPatch, AppVersionDate)
 	app.Version(appVersion)
 	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
