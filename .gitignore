@@ -83,8 +83,15 @@ fabric.properties
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-
 ### Custom
 
 # Private notes
 LOCAL-NOTES.md
+
+# Binaries
+gotp
+
+# Finder junk
+.DS_Store
+**/.DS_Store
+

@@ -5,7 +5,6 @@ import (
 	"github.com/tucnak/store"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"os"
-	"time"
 )
 
 var (
@@ -90,31 +89,28 @@ func main() {
 		fmt.Println("Debug mode enabled.")
 	}
 	// fmt.Printf(keychain.Accounts[0].Site)
-	app.Version("0.0.1")
+	appVersion := fmt.Sprintf("%i.%i.%i (%i)", AppVersionMajor, AppVersionMinor,
+		AppVersionPatch, AppVersionDate)
+	app.Version(appVersion)
 	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
 	case storeCommand.FullCommand():
-		fmt.Printf("Storing --> ")
-		fmt.Printf("Site: %s ", *storeSite)
 		if *storeUid != "" {
-			fmt.Printf("UID: %s ", *storeUid)
+			cmdStoreWithUID(*storeSite, *storeKey, *storeUid)
+		} else {
+			cmdStore(*storeSite, *storeKey)
 		}
-		fmt.Printf("Key: %s", *storeKey)
-		fmt.Println()
 	case generateCommand.FullCommand():
-		fmt.Printf("Generating --> ")
-		fmt.Printf("Site: %s ", *generateSite)
 		if *generateUid != "" {
-			fmt.Printf("UID: %s", *generateUid)
+			cmdGenerateWithUID(*generateSite, *generateUid)
+		} else {
+			cmdGenerate(*generateSite)
 		}
-		fmt.Println()
 	case deleteCommand.FullCommand():
-		fmt.Printf("Deleting --> ")
-		fmt.Printf("Site: %s ", *deleteSite)
 		if *deleteUid != "" {
-			fmt.Printf("UID: %s", *deleteUid)
+			cmdDeleteWithUID(*deleteSite, *deleteUid)
+		} else {
+			cmdDelete(*deleteSite)
 		}
-		fmt.Println()
 	}
-	time.Sleep(10 * time.Second)
 	saveConfig(&keychain)
 }
