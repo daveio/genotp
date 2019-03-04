@@ -1,14 +1,9 @@
 package main
 
-import (
-	"fmt"
-)
-
-func cmdStore(site string, key string) {
-	fmt.Printf("-- in cmdStore(%s, %s)\n", site, key)
-	cmdStoreWithUID(site, key, "__default")
+func cmdStore(keychain Keychain, site string, key string) {
+	cmdStoreWithUID(keychain, site, key, "__default")
 }
 
-func cmdStoreWithUID(site string, key string, uid string) {
-	fmt.Printf("-- in cmdStoreWithUID(%s, %s, %s)\n", site, key, uid)
+func cmdStoreWithUID(keychain Keychain, site string, key string, uid string) {
+	storeSecret(keychain, site, key, uid)
 }

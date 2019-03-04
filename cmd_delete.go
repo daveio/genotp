@@ -1,14 +1,9 @@
 package main
 
-import (
-	"fmt"
-)
-
-func cmdDelete(site string) {
-	fmt.Printf("-- in cmdDelete(%s)\n", site)
-	cmdDeleteWithUID(site, "__default")
+func cmdDelete(keychain Keychain, site string) {
+	cmdDeleteWithUID(keychain, site, "__default")
 }
 
-func cmdDeleteWithUID(site string, uid string) {
-	fmt.Printf("-- in cmdDeleteWithUID(%s, %s)\n", site, uid)
+func cmdDeleteWithUID(keychain Keychain, site string, uid string) {
+	_ = keychain
 }

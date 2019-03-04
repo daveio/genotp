@@ -53,14 +53,12 @@ var (
 			String()
 )
 
-type Account struct {
-	Site string `json:"site"`
-	UID  string `json:"uid"`
-	Key  string `json:"key"`
+type Site struct {
+	UIDs map[string]string `json:"uids"`
 }
 
 type Keychain struct {
-	Accounts []Account `json:"accounts"`
+	Sites map[string]Site `json:"sites"`
 }
 
 func init() {
@@ -85,31 +83,33 @@ func saveConfig(keychain *Keychain) {
 
 func main() {
 	keychain := loadConfig()
+	if len(keychain.Sites) < 1 {
+		keychain.Sites = make(map[string]Site)
+	}
 	if *debug {
 		fmt.Println("Debug mode enabled.")
 	}
-	// fmt.Printf(keychain.Accounts[0].Site)
 	appVersion := fmt.Sprintf("%d.%d.%d (%d)", AppVersionMajor, AppVersionMinor,
 		AppVersionPatch, AppVersionDate)
 	app.Version(appVersion)
 	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
 	case storeCommand.FullCommand():
 		if *storeUid != "" {
-			cmdStoreWithUID(*storeSite, *storeKey, *storeUid)
+			cmdStoreWithUID(keychain, *storeSite, *storeKey, *storeUid)
 		} else {
-			cmdStore(*storeSite, *storeKey)
+			cmdStore(keychain, *storeSite, *storeKey)
 		}
 	case generateCommand.FullCommand():
 		if *generateUid != "" {
-			cmdGenerateWithUID(*generateSite, *generateUid)
+			cmdGenerateWithUID(keychain, *generateSite, *generateUid)
 		} else {
-			cmdGenerate(*generateSite)
+			cmdGenerate(keychain, *generateSite)
 		}
 	case deleteCommand.FullCommand():
 		if *deleteUid != "" {
-			cmdDeleteWithUID(*deleteSite, *deleteUid)
+			cmdDeleteWithUID(keychain, *deleteSite, *deleteUid)
 		} else {
-			cmdDelete(*deleteSite)
+			cmdDelete(keychain, *deleteSite)
 		}
 	}
 	saveConfig(&keychain)
