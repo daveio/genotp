@@ -6,5 +6,5 @@ type SiteError struct {
 
 type UidError struct {
 	Site string
-	Uid string
+	Uid  string
 }

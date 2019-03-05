@@ -4,26 +4,66 @@ import (
 	"fmt"
 	"github.com/daveio/gotp/otputils"
 	"github.com/daveio/gotp/storage"
+	"github.com/daveio/gotp/verbose"
 )
 
-func Generate(keychain storage.Keychain, site string, uid string) {
-	secretKey, err := storage.GetSecret(keychain, site, uid)
-	if err == nil {
-		if uid == "__default" {
-			fmt.Printf("%s : ", site)
+var (
+	V = verbose.V
+)
+
+func Generate(keychain storage.Keychain, site string, uid string) (error error) {
+	secretKey, errGet := storage.GetSecret(keychain, site, uid)
+	if errGet == nil {
+		otp, errGen := otputils.GenerateOTP(secretKey)
+		if errGen == nil {
+			if uid == "__default" {
+				fmt.Printf("%s : ", site)
+			} else {
+				fmt.Printf("%s @ %s : ", uid, site)
+			}
+			fmt.Printf("%s\n", otp)
+			return nil
 		} else {
-			fmt.Printf("%s @ %s : ", uid, site)
+			return errGen
 		}
-		fmt.Printf("%s\n", otputils.GenerateOTP(secretKey))
 	} else {
-		fmt.Printf("%s", err)
+		return errGet
 	}
 }
 
-func Store(keychain storage.Keychain, site string, key string, uid string) {
-	storage.StoreSecret(keychain, site, key, uid)
+func Store(keychain storage.Keychain, site string, key string, uid string) (error error) {
+	err := storage.StoreSecret(keychain, site, key, uid)
+	if err == nil {
+		return nil
+	} else {
+		return err
+	}
 }
 
-func Delete(keychain storage.Keychain, site string, uid string) {
-	_ = keychain
+func ListSites(keychain storage.Keychain) (error error) {
+	siteNames := storage.GetSiteNames(keychain, true)
+	for siteIdx := range siteNames {
+		fmt.Println(siteNames[siteIdx])
+	}
+	return nil
 }
+
+func ListUids(keychain storage.Keychain, siteName string) (error error) {
+	siteUids := storage.GetUidsForSite(keychain, siteName, true)
+	for uidIdx := range siteUids {
+		fmt.Println(siteUids[uidIdx])
+	}
+	return nil
+}
+
+func DeleteUID(keychain storage.Keychain, siteName string, uid string) (error error) {
+	err := storage.DeleteUID(keychain, siteName, uid)
+	return err
+}
+
+func DeleteSite(keychain storage.Keychain, siteName string) (error error) {
+	err := storage.DeleteSite(keychain, siteName)
+	return err
+}
+
+// TODO URI parsing command

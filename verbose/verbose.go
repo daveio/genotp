@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	verbose bool = true
-	appVersion string = "VER?"
+	verbose    = true
+	appVersion = "VER?"
 )
 
 func InitV(setVerbose bool, setAppVersion string) {

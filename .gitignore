@@ -95,3 +95,5 @@ gotp
 .DS_Store
 **/.DS_Store
 
+# Release assets
+release/
