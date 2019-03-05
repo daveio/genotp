@@ -1,13 +1,22 @@
-package main
+package otputils
 
 import (
+	"fmt"
 	"github.com/pquerna/otp/totp"
+	"regexp"
 	"time"
 )
 
-func generateOTP(key string) string {
+func GenerateOTP(key string) string {
 	res, _ := totp.GenerateCode(key, time.Now())
 	return res
+}
+
+func ParseURI(totpURI string) (site string, uid string, key string, errOut error) {
+	meta := regexp.QuoteMeta("?")
+	expr, _ := regexp.Compile("^otpauth://totp/(.*):(.*)" + meta + "(.*)$")
+	fmt.Println(expr.FindStringSubmatch(totpURI))
+	return "site", "uid", "key", nil
 }
 
 /*

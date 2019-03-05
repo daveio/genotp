@@ -2,115 +2,115 @@ package main
 
 import (
 	"fmt"
-	"github.com/tucnak/store"
+	"github.com/daveio/gotp/commands"
+	"github.com/daveio/gotp/storage"
+	"github.com/daveio/gotp/verbose"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"os"
 )
 
 var (
+	V = verbose.V
+	appVersion = fmt.Sprintf("%d.%d.%d", AppVersionMajor, AppVersionMinor, AppVersionPatch)
+	appVersionWithDate = fmt.Sprintf("%s %d", appVersion, AppVersionDate)
 	app = kingpin.
 		New("gotp", "Generate OATH-TOTP one-time passwords from the command line.")
-	debug = app.
-		Flag("debug", "Enable debug mode.").
-		Short('d').
+	mVerbose = app.
+		Flag("verbose", "Show more detail.").
+		Short('v').
 		Bool()
 	storeCommand = app.
-			Command("store", "Store a new account.").
-			Alias("s")
+		Command("store", "Store a new account.").
+		Alias("s")
 	storeSite = storeCommand.
-			Arg("site", "An identifier for the site which you will use to generate OTPs.").
-			Required().
-			String()
+		Arg("site", "An identifier for the site which you will use to generate OTPs.").
+		Required().
+		String()
 	storeKey = storeCommand.
-			Arg("key", "Your secret key for the site.").
-			Required().
-			String()
+		Arg("key", "Your secret key for the site.").
+		Required().
+		String()
 	storeUid = storeCommand.
-			Flag("uid", "An optional username or other identifier for the account this key is for. Useful if you have multiple accounts on a single site.").
-			Short('u').
-			String()
+		Flag("uid", "An optional username or other identifier for the account this key is for. Useful if you have multiple accounts on a single site.").
+		Short('u').
+		String()
+/*
+	storeURICommand = app.
+		Command("store-uri", "Store a new account using a totp:// URI.").
+		Alias("su")
+	storeURIURI = storeURICommand.
+		Arg("uri", "A valid totp:// URI").
+		Required().
+		String()
+*/
 	generateCommand = app.
-			Command("generate", "Generate OTP(s) for a site.").
-			Alias("g")
+		Command("generate", "Generate OTP(s) for a site.").
+		Alias("g")
 	generateSite = generateCommand.
-			Arg("site", "The site to generate OTP(s) for.").
-			Required().
-			String()
+		Arg("site", "The site to generate OTP(s) for.").
+		Required().
+		String()
 	generateUid = generateCommand.
-			Flag("uid", "An optional identifier for the key to use. Only necessary if you have multiple keys for a site.").
-			Short('u').
-			String()
+		Flag("uid", "An optional identifier for the key to use. Only necessary if you have multiple keys for a site.").
+		Short('u').
+		String()
 	deleteCommand = app.
-			Command("delete", "Generate OTP(s) for a site.").
-			Alias("d")
+		Command("delete", "Generate OTP(s) for a site.").
+		Alias("d")
 	deleteSite = deleteCommand.
-			Arg("site", "The site to delete.").
-			Required().
-			String()
+		Arg("site", "The site to delete.").
+		Required().
+		String()
 	deleteUid = deleteCommand.
-			Flag("uid", "An optional identifier for the key to delete. Only necessary if you have multiple keys for a site.").
-			Short('u').
-			String()
+		Flag("uid", "An optional identifier for the key to delete. Only necessary if you have multiple keys for a site.").
+		Short('u').
+		String()
 )
 
-type Site struct {
-	UIDs map[string]string `json:"uids"`
-}
-
-type Keychain struct {
-	Sites map[string]Site `json:"sites"`
-}
-
 func init() {
-	store.Init("gotp")
-}
-
-func loadConfig() Keychain {
-	var keychain Keychain
-	err := store.Load("keychain.json", &keychain)
-	if err != nil {
-		panic(err)
-	}
-	return keychain
-}
-
-func saveConfig(keychain *Keychain) {
-	err := store.Save("keychain.json", &keychain)
-	if err != nil {
-		panic(err)
-	}
+	storage.InitStorage("gotp")
 }
 
 func main() {
-	keychain := loadConfig()
+	app.Version(appVersionWithDate)
+	appCmd, appErr := app.Parse(os.Args[1:])
+	verbose.InitV(*mVerbose, appVersion)
+	V("Verbose mode enabled")
+	keychain := storage.LoadConfig()
 	if len(keychain.Sites) < 1 {
-		keychain.Sites = make(map[string]Site)
+		keychain.Sites = make(map[string]storage.Site)
 	}
-	if *debug {
-		fmt.Println("Debug mode enabled.")
-	}
-	appVersion := fmt.Sprintf("%d.%d.%d (%d)", AppVersionMajor, AppVersionMinor,
-		AppVersionPatch, AppVersionDate)
-	app.Version(appVersion)
-	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
+	switch kingpin.MustParse(appCmd, appErr) {
 	case storeCommand.FullCommand():
+		V("storing a new item")
 		if *storeUid != "" {
-			cmdStoreWithUID(keychain, *storeSite, *storeKey, *storeUid)
+			commands.Store(keychain, *storeSite, *storeKey, *storeUid)
 		} else {
-			cmdStore(keychain, *storeSite, *storeKey)
+			commands.Store(keychain, *storeSite, *storeKey, "__default")
 		}
 	case generateCommand.FullCommand():
+		V("generating an OTP")
 		if *generateUid != "" {
-			cmdGenerateWithUID(keychain, *generateSite, *generateUid)
+			commands.Generate(keychain, *generateSite, *generateUid)
 		} else {
-			cmdGenerate(keychain, *generateSite)
+			commands.Generate(keychain, *generateSite, "__default")
 		}
 	case deleteCommand.FullCommand():
+		V("deleting an item")
 		if *deleteUid != "" {
-			cmdDeleteWithUID(keychain, *deleteSite, *deleteUid)
+			commands.Delete(keychain, *deleteSite, *deleteUid)
 		} else {
-			cmdDelete(keychain, *deleteSite)
+			commands.Delete(keychain, *deleteSite, "__default")
 		}
+/*	case storeURICommand.FullCommand():
+		site, uid, key, err := parseURI(*storeURIURI)
+		if err == nil {
+			V(fmt.Sprintf("site: %s, uid: %s, key: %s", site, uid, key))
+		} else {
+			fmt.Println("Malformed URI")
+		} */
+	default:
+		V("BUG: invalid command uncaught by CLI parser")
 	}
-	saveConfig(&keychain)
+	storage.SaveConfig(&keychain)
 }
