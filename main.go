@@ -75,6 +75,8 @@ var (
 			Arg("site", "The site to list accounts for.").
 			Required().
 			String()
+	helloCommand = app.
+			Command("hello", "Used by shell plugins like zsh-gotp to identify this binary. Prints GitHub URL.")
 )
 
 func init() {
@@ -147,6 +149,8 @@ func main() {
 		if errLU != nil {
 			panic(errLU)
 		}
+	case helloCommand.FullCommand():
+		commands.Hello()
 	// TODO URI parsing glue
 	default:
 		V("BUG: invalid command uncaught by CLI parser")

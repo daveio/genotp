@@ -66,4 +66,8 @@ func DeleteSite(keychain storage.Keychain, siteName string) (error error) {
 	return err
 }
 
+func Hello() {
+	fmt.Println("https://github.com/daveio/gotp")
+}
+
 // TODO URI parsing command
