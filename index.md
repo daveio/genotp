@@ -33,9 +33,13 @@ title: gotp
 
 ## The easy way, with Homebrew
 
-*Note: the Homebrew recipe has not yet been accepted, and I don't maintain a personal tap. As such, this method will not work yet. This note will be removed when it's available in the mainline repository.*
+With Homebrew installed, first add my personal tap.
 
-With Homebrew installed, just do
+`brew tap daveio/daveio`
+
+You only need to do this once, after which all of my projects will then be available for installation, and `brew update` will find the latest versions of my software.
+
+Once the tap is added, simply do
 
 `brew install gotp`
 
