@@ -2,13 +2,44 @@
 title: gotp
 ---
 
-[![Build Status](https://travis-ci.com/daveio/gotp.svg?branch=master)](https://travis-ci.com/daveio/gotp)
+<table>
+  <thead>
+    <tr>
+      <th>
+        <code>master</code>
+      </th>
+      <th>
+        <code>gh-pages</code>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <a href="https://travis-ci.com/daveio/gotp/branches" rel="nofollow">
+          <img src="https://travis-ci.com/daveio/gotp.svg?branch=master" alt="master branch build status">
+        </a>
+      </td>
+      <td>
+        <a href="https://travis-ci.com/daveio/gotp/branches" rel="nofollow">
+          <img src="https://travis-ci.com/daveio/gotp.svg?branch=gh-pages" alt="gh-pages branch build status">
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 # Installation
 
-## The easy way, with `zsh`
+## The easy way, with Homebrew
 
-I also develop [`zsh-gotp`][link-zsh-gotp], a `zsh` plugin which handles automatic installation and setup of aliases and completion. If you use `zsh` it's strongly recommended and will save you a lot of effort.
+*Note: the Homebrew recipe has not yet been accepted, and I don't maintain a personal tap. As such, this method will not work yet. This note will be removed when it's available in the mainline repository.*
+
+With Homebrew installed, just do
+
+`brew install gotp`
+
+and you're ready to roll.
 
 ## The easy way, with Go
 
@@ -17,6 +48,10 @@ If you have a working Go installation, all you need to do is
 `go get github.com/daveio/gotp`
 
 after which you'll have a shiny new `gotp` binary in your `$GOPATH/bin`.
+
+## The easy way, with `zsh`
+
+I also develop [`zsh-gotp`][link-zsh-gotp], a `zsh` plugin which handles automatic installation and setup of aliases and completion. If you use `zsh` it's strongly recommended and might save you a lot of effort.
 
 ## The manual way
 
