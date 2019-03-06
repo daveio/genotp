@@ -37,7 +37,7 @@ With Homebrew installed, first add my personal tap.
 
 `brew tap daveio/daveio`
 
-You only need to do this once, after which all of my projects will then be available for installation, and `brew update` will find the latest versions of my software.
+You only need to do this once, after which all of my projects will then be available for installation, and Homebrew will find the latest versions of my software on an ongoing basis.
 
 Once the tap is added, simply do
 
