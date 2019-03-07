@@ -73,21 +73,28 @@ If you want additional architectures added to the build scripts, [open a feature
 
 Try [`zsh-gotp`][link-zsh-gotp].
 
-### Shell aliases
+### Shell integration
 
-Recommended alias, to be added to your shell's rc file:
+*The following contains clipboard functionality specific to macOS, but is easily adapted to other systems.*
 
-```sh
-alias otp='gotp generate'
-```
-
-This will allow you to do
+If you're using [`zsh-gotp`][link-zsh-gotp] then this will be automatically set up for you, but if you want to do it manually, add the following function to your shell's rc file:
 
 ```sh
-otp sitename
+otp() {
+  out=$(gotp generate ${1})
+  pwd=$(echo "${out}" | cut -d ":" -f 2 | cut -b 2-)
+  echo "${pwd}"
+  echo -n "${pwd}" | pbcopy
+}
 ```
 
-instead of typing the whole thing all the time.
+You can then do
+
+`otp sitename`
+
+to generate an OTP for the default account for `sitename`, and automatically copy it to the clipboard.
+
+If you want to integrate clipboard functionality on non-macOS systems, find a command which writes `STDIN` to the clipboard and replace `pbcopy` in the function with that command. Alternatively, feel free to comment out the last line entirely, and just copy the output manually.
 
 ### Short forms
 
