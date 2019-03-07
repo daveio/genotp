@@ -53,7 +53,7 @@ If you have a working Go installation, all you need to do is
 
 after which you'll have a shiny new `gotp` binary in your `$GOPATH/bin`.
 
-## The easy way, with `zsh`
+## The easy way, with zsh
 
 I also develop [`zsh-gotp`][link-zsh-gotp], a `zsh` plugin which handles automatic installation and setup of aliases and completion. If you use `zsh` it's strongly recommended and might save you a lot of effort.
 
@@ -177,7 +177,7 @@ Currently, credentials are stored in plain text in a JSON file named `keychain.j
 
 TOTP credentials are usually supplied in the form of a QR code for scanning on a mobile authenticator. The ability to feed `gotp` a screenshot or other image containing a QR code would make the process of getting credentials imported a lot cleaner.
 
-## `totp://` URL parsing
+## totp:// URL parsing
 
 After the QR code is decoded, the actual TOTP credentials are supplied in the form of a URL with the `totp://` scheme. Parsing these URLs natively takes another manual step out of the process.
 
