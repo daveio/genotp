@@ -1,14 +1,49 @@
 # `gotp`
 
-[![Build Status](https://travis-ci.com/daveio/gotp.svg?branch=master)](https://travis-ci.com/daveio/gotp)
-
 Generate OATH-TOTP one-time passwords from the command line.
+
+<table>
+  <thead>
+    <tr>
+      <th>
+        <code>master</code>
+      </th>
+      <th>
+        <code>gh-pages</code>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <a href="https://travis-ci.com/daveio/gotp/branches" rel="nofollow">
+          <img src="https://travis-ci.com/daveio/gotp.svg?branch=master" alt="master branch build status">
+        </a>
+      </td>
+      <td>
+        <a href="https://travis-ci.com/daveio/gotp/branches" rel="nofollow">
+          <img src="https://travis-ci.com/daveio/gotp.svg?branch=gh-pages" alt="gh-pages branch build status">
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ## Installation
 
-### The easy way, with `zsh`
+### The easy way, with Homebrew
 
-I also develop [`zsh-gotp`][link-zsh-gotp], a `zsh` plugin which handles automatic installation and setup of aliases and completion. If you use `zsh` it's strongly recommended and will save you a lot of effort.
+With Homebrew installed, first add my personal tap.
+
+`brew tap daveio/daveio`
+
+You only need to do this once, after which all of my projects will then be available for installation, and Homebrew will find the latest versions of my software on an ongoing basis.
+
+Once the tap is added, simply do
+
+`brew install gotp`
+
+and you're ready to roll.
 
 ### The easy way, with Go
 
@@ -17,6 +52,10 @@ If you have a working Go installation, all you need to do is
 `go get github.com/daveio/gotp`
 
 after which you'll have a shiny new `gotp` binary in your `$GOPATH/bin`.
+
+### The easy way, with `zsh`
+
+I also develop [`zsh-gotp`][link-zsh-gotp], a `zsh` plugin which handles automatic installation and setup of aliases and completion. If you use `zsh` it's strongly recommended and might save you a lot of effort.
 
 ### The manual way
 
@@ -34,30 +73,21 @@ If you want additional architectures added to the build scripts, [open a feature
 
 Try [`zsh-gotp`][link-zsh-gotp].
 
-### Shell integration
+### Shell aliases
 
-*The following contains clipboard functionality specific to macOS, but is easily adapted to other systems.*
-
-If you're using [`zsh-gotp`][link-zsh-gotp] this will be automatically set up for you, but if you want to do it manually, add the following function to your shell's rc file.
+Recommended alias, to be added to your shell's rc file:
 
 ```sh
-otp() {
-  out=$(gotp generate ${1})
-  pwd=$(echo "${out}" | cut -d ":" -f 2 | cut -b 2-)
-  echo "${pwd}"
-  echo -n "${pwd}" | pbcopy
-}
+alias otp='gotp generate'
 ```
 
-You can then do
+This will allow you to do
 
 ```sh
 otp sitename
 ```
 
-to generate an OTP for the default account for `sitename`, and automatically copy it to the clipboard.
-
-If you want to integrate clipboard functionality on non-macOS systems, find a command which writes `STDIN` to the clipboard and replace `pbcopy` in the function with that command. Alternatively, feel free to comment out the last line entirely, and just copy the output manually.
+instead of typing the whole thing all the time.
 
 ### Short forms
 
